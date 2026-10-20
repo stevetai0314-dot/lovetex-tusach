@@ -72,8 +72,6 @@ footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font
 const CONFIG = {
   // Google Sheet「書目」分頁發布的 CSV 連結
   csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6-XrRiUvj1rEjj4sxCW5LOuwSVUCCEoOy7weS_jrhOP9y9QzunjF6kiROzK1IJQNzIegpSCXOEf8E/pub?gid=390963957&single=true&output=csv",
-  hrName: "chị Lan (HR)",          // 接預約的人，例如 "chị Lan (HR)"
-  zaloPhone: "0901234567",         // 選填：Zalo 電話，例如 "0901234567"，填了會出現一鍵聯絡按鈕
   hotCount: 3            // 借閱次數達到幾次顯示「Được yêu thích」
 };
 
@@ -221,11 +219,7 @@ function renderStats(){
 function renderHow(){
   const h=document.getElementById("how"); h.textContent="";
   h.appendChild(el("b",null,"Muốn mượn? "));
-  h.appendChild(document.createTextNode(`Nhắn Zalo cho ${CONFIG.hrName} tên sách (hoặc mã sách). ${CONFIG.hrName} sẽ giữ sách cho anh chị, tan ca ghé lấy là được. Mượn 2 tuần, gia hạn được 1 lần.`));
-  if(CONFIG.zaloPhone){
-    const a=el("a",null," Nhắn Zalo ngay →"); a.href="https://zalo.me/"+CONFIG.zaloPhone.replace(/\D/g,""); a.target="_blank"; a.rel="noopener"; a.style.color="var(--accent)"; a.style.fontWeight="600";
-    h.appendChild(a);
-  }
+  h.appendChild(document.createTextNode("Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần."));
 }
 
 function renderZones(){
@@ -249,7 +243,7 @@ async function load(){
   }catch(e){
     state.items=fallbackItems(); state.live=false;
     const n=document.getElementById("notice"); n.hidden=false;
-    n.firstElementChild.textContent="Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy hỏi "+CONFIG.hrName+" để biết sách còn hay không.";
+    n.firstElementChild.textContent="Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.";
   }
   renderStats(); render();
 }
