@@ -12,7 +12,10 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{padding:28px 16px 18px;max-width:960px;margin:0 auto}
+header{padding:28px 16px 18px;max-width:960px;margin:0 auto;position:relative}
+header h1{padding-right:104px}
+.lang{position:absolute;top:22px;right:16px;min-height:44px;min-width:88px;padding:0 14px;border:1px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);font-weight:600;font-size:15px;font-family:inherit;cursor:pointer}
+.lang:active{background:var(--y-soft)}
 h1{font-size:26px;line-height:1.25;margin:0 0 6px}
 .sub{color:var(--muted);margin:0}
 .stats{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
@@ -54,8 +57,9 @@ footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font
 </head>
 <body>
 <header>
-  <h1>Tủ sách cho con 📚</h1>
-  <p class="sub">Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.</p>
+  <button class="lang" id="lang" type="button" aria-label="Language / 語言"></button>
+  <h1 id="h1">Tủ sách cho con 📚</h1>
+  <p class="sub" id="sub">Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.</p>
   <div class="stats" id="stats"></div>
 </header>
 <section class="how"><div id="how"></div></section>
@@ -64,7 +68,7 @@ footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font
   <div class="chips" id="zones" role="group" aria-label="Lọc theo độ tuổi"></div>
   <div class="row">
     <input type="search" id="q" placeholder="Tìm tên sách…" aria-label="Tìm tên sách">
-    <label class="toggle"><input type="checkbox" id="onlyAvail"> Còn sách</label>
+    <label class="toggle"><input type="checkbox" id="onlyAvail"> <span id="onlyLbl">Còn sách</span></label>
   </div>
 </div>
 <main id="list"><p class="empty">Đang tải danh sách…</p></main>
@@ -151,16 +155,63 @@ const COVERS = {
   "Storytime – Điều ước của chuột chũi": "covers/30.jpg"
 };
 
-const ZONES = [
-  {key:"all", label:"Tất cả"},
-  {key:"y", label:"🟡 0–2 tuổi"},
-  {key:"g", label:"🟢 2–4 tuổi"},
-  {key:"b", label:"🔵 4–6 tuổi"}
-];
-const state = {zone:"all", q:"", onlyAvail:false, items:[], live:false};
+const BOOKS_ZH = {
+  "Ú òa mở ra – Phát triển nhận thức": ["多頁翻翻書，色彩豐富。寶寶自己翻頁，找出熟悉的動物和物品。", "先問寶寶：「這是什麼呢？」再一起翻開來看。"],
+  "Con thích chơi với bạn ấy lắm": ["教寶寶怎麼交朋友，開心又互相尊重地一起玩。", "問寶寶：「在學校你最喜歡跟誰玩？」"],
+  "Tớ cũng muốn đứng tè": ["輕鬆說明男生和女生上廁所為什麼不一樣。", "寶寶發問時自然地回答，不用害羞。"],
+  "Nếu con là con trai": ["寶寶認識自己是男生還是女生，每個人都很特別。", "問寶寶：「你最喜歡自己哪一點？」"],
+  "Con được sinh ra từ đâu": ["用適合年齡的話，回答每個孩子都會問的問題。", "慢慢念，隨時讓寶寶繼續發問。"],
+  "Tớ không ti mẹ nữa": ["幫助寶寶在斷母乳時做好心理準備，溫柔、不害怕。", "念的時候抱著寶寶，稱讚他已經長大了。"],
+  "Con tắm cùng bố được không": ["寶寶隨著長大，學習身體的隱私。", "告訴寶寶：「身體是你自己的，你有權保有隱私。」"],
+  "Đừng chạm vào cháu": ["教寶寶大聲說「不要！」，當有人碰觸隱私部位時要告訴爸媽。很適合親子一起讀。", "和寶寶一起練習大聲說：「不要碰我！」"],
+  "Con muốn ngủ một mình": ["幫助寶寶有自信地開始自己睡。", "適合睡前閱讀。"],
+  "Vì sao cần ăn rau": ["蔬菜如何讓身體健康。讀完後寶寶比較願意吃蔬菜。", "晚餐時讓寶寶自己選一種蔬菜。"],
+  "Vì sao bị ốm": ["細菌是什麼、為什麼會生病、怎樣才能快點好。", "讀完後陪寶寶一起洗手。"],
+  "Vì sao cần biết đọc": ["會閱讀，寶寶就能自己探索書裡的世界。", "念的時候用手指著字，讓寶寶熟悉字形。"],
+  "Vì sao phải đi ngủ": ["睡得夠，寶寶長得快，一整天都開心。", "適合睡前馬上閱讀。"],
+  "Vì sao khủng long": ["恐龍是誰、怎麼生活，以及為什麼不見了。", "和寶寶一起學恐龍吼叫。"],
+  "Vì sao trời đổ mưa": ["水蒸發變成雲，再落下變成雨。", "下次下雨時，問寶寶：「雨是從哪裡來的呢？」"],
+  "Vì sao ngày và đêm": ["為什麼有明亮的白天和黑暗的夜晚。", "用手電筒和球，和寶寶一起做實驗。"],
+  "Vì sao nên nghe lời": ["用貼近生活的情境，說明為什麼要聽爸媽的話。", "問寶寶：「如果是你，你會怎麼做？」"],
+  "Vì sao nước biển mặn": ["海水裡的鹽是從哪裡來的。", "讓寶寶嚐一點鹽水來比較。"],
+  "Vì sao ong kêu vo ve": ["嗡嗡聲來自蜜蜂快速拍動的翅膀。", "和寶寶一起模仿「嗡嗡」的聲音。"],
+  "Khả năng thuyết phục": ["教寶寶用有禮貌又有自信的方式說話，讓別人理解並同意自己。", "問寶寶：「你會怎麼說，朋友才肯借你玩具？」"],
+  "Storytime – Nhím con vào lớp một": ["小刺蝟第一天上學好緊張。適合即將進新班級的寶寶。", "問寶寶：「第一天上學你覺得怎麼樣？」"],
+  "Storytime – Chớ mắc mưu sư tử": ["聰明的小動物們沒有中獅子的圈套。關於提高警覺的一課。", "故事讀到一半停下來問：「你猜獅子想做什麼？」"],
+  "Storytime – Chiếc gối hoàn hảo của khỉ con": ["小猴子去找一個真正合意的枕頭。", "問寶寶：「你的枕頭有什麼特別的地方？」"],
+  "Storytime – Bác gấu ốm rồi": ["朋友們一起照顧生病的熊伯伯。關於關心他人的一課。", "問寶寶：「爸媽累的時候，你可以做什麼？」"],
+  "Storytime – Khủng long tập viết sách": ["小恐龍即使一開始寫不好，也堅持練習寫字。", "寶寶努力做一件困難的事時，記得稱讚他。"],
+  "Storytime – Món quà dành tặng thỏ con": ["禮物的意義，以及分享的快樂。", "問寶寶：「你想送誰一份禮物？」"],
+  "Storytime – Vịt con thoát nạn": ["小鴨冷靜地度過危險。", "告訴寶寶和爸媽走散時該怎麼辦。"],
+  "Storytime – Chim cánh cụt dũng cảm": ["小企鵝克服了自己的恐懼。", "問寶寶：「你最怕什麼？」"],
+  "Storytime – Sói xám đã biết xem giờ": ["跟著灰狼一起學看時鐘。", "指著家裡的時鐘問寶寶：「現在幾點了？」"],
+  "Storytime – Điều ước của chuột chũi": ["鼹鼠和牠的小小願望。", "問寶寶：「如果可以許一個願望，你想許什麼？」"]
+};
+const SERIES_ZH = {
+  "Những bài học đầu tiên về Giới tính": ["這套書幫助寶寶認識身體、學會保護自己，用溫柔的故事說明。", "陪孩子一起讀，孩子發問時自然地回答。"],
+  "Khám phá kiến thức – Vì sao": ["給愛問「為什麼？」的寶寶的簡短問答書。", "讀答案之前先問寶寶：「你猜是為什麼？」"],
+  "Tò Mò Muốn Biết": ["多層翻翻書，寶寶自己翻開來探索世界知識。", "和寶寶一起輕輕翻，翻頁很容易破喔。"],
+  "Storytime": ["簡短的圖畫故事，幫助寶寶養成好習慣和好性格。", "讀完問寶寶：「你喜歡哪個角色？」"]
+};
+const SERIES_NAME_ZH = {"Những bài học đầu tiên về Giới tính":"性別啟蒙第一課","Khám phá kiến thức – Vì sao":"探索知識 – 為什麼","Tò Mò Muốn Biết":"好奇想知道","Storytime":"Storytime 故事時間"};
+const TITLES_ZH = {
+  "Ú òa mở ra – Phát triển nhận thức":"躲貓貓翻翻書 – 認知發展","Con thích chơi với bạn ấy lắm":"我好喜歡和他一起玩","Tớ cũng muốn đứng tè":"我也想站著尿尿","Nếu con là con trai":"如果我是男孩","Con được sinh ra từ đâu":"我是從哪裡來的","Tớ không ti mẹ nữa":"我不再吃媽媽的奶了","Con tắm cùng bố được không":"我可以和爸爸一起洗澡嗎","Đừng chạm vào cháu":"不要碰我","Con muốn ngủ một mình":"我想自己睡",
+  "Vì sao cần ăn rau":"為什麼要吃蔬菜","Vì sao bị ốm":"為什麼會生病","Vì sao cần biết đọc":"為什麼要會閱讀","Vì sao phải đi ngủ":"為什麼要睡覺","Vì sao khủng long":"恐龍為什麼消失了","Vì sao trời đổ mưa":"為什麼會下雨","Vì sao ngày và đêm":"為什麼有白天和黑夜","Vì sao nên nghe lời":"為什麼要聽話","Vì sao nước biển mặn":"海水為什麼是鹹的","Vì sao ong kêu vo ve":"蜜蜂為什麼嗡嗡叫","Khả năng thuyết phục":"說服力",
+  "Storytime – Nhím con vào lớp một":"小刺蝟上小學","Storytime – Chớ mắc mưu sư tử":"別中了獅子的計","Storytime – Chiếc gối hoàn hảo của khỉ con":"小猴子的完美枕頭","Storytime – Bác gấu ốm rồi":"熊伯伯生病了","Storytime – Khủng long tập viết sách":"小恐龍學寫字","Storytime – Món quà dành tặng thỏ con":"送給小兔子的禮物","Storytime – Vịt con thoát nạn":"小鴨脫險記","Storytime – Chim cánh cụt dũng cảm":"勇敢的小企鵝","Storytime – Sói xám đã biết xem giờ":"灰狼學會看時間","Storytime – Điều ước của chuột chũi":"鼹鼠的願望"
+};
+const UI = {
+  vi:{h1:"Tủ sách cho con 📚",sub:"Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.",howB:"Muốn mượn? ",how:"Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần.",books:"cuốn sách",left:"cuốn đang còn",borrowed:"lượt đã mượn",search:"Tìm tên sách…",only:"Còn sách",unknown:"Chưa rõ",avail:(a,c)=>c>1?`Còn ${a}/${c} cuốn`:"Còn sách",out:"Đang được mượn",code:"Mã: ",hot:n=>`⭐ Được yêu thích · ${n} lượt`,cnt:n=>`${n} lượt mượn`,empty:"Không tìm thấy sách phù hợp.",loading:"Đang tải danh sách…",notice:"Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.",foot:t=>`Cập nhật lúc ${t}. Tình trạng sách có thể chậm vài phút.`,btn:"中文",zones:{all:"Tất cả",y:"🟡 0–2 tuổi",g:"🟢 2–4 tuổi",b:"🔵 4–6 tuổi"},zone:{y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi"}},
+  zh:{h1:"給孩子的書櫃 📚",sub:"Lovetex 員工孩子的免費書籍。不用押金，不收費。",howB:"想借書？",how:"到辦公室借書，下班順路來就可以。借期 2 週，可續借 1 次。",books:"本書",left:"本還在",borrowed:"次已借出",search:"搜尋書名…",only:"還有書",unknown:"未確定",avail:(a,c)=>c>1?`還有 ${a}/${c} 本`:"還有書",out:"已被借走",code:"編號：",hot:n=>`⭐ 很受歡迎 · 被借 ${n} 次`,cnt:n=>`被借 ${n} 次`,empty:"找不到符合的書。",loading:"載入書單中…",notice:"暫時無法載入借閱狀況。書單仍可瀏覽，請到辦公室詢問書是否還在。",foot:t=>`更新時間 ${t}。借閱狀況可能延遲幾分鐘。`,btn:"Tiếng Việt",zones:{all:"全部",y:"🟡 0–2 歲",g:"🟢 2–4 歲",b:"🔵 4–6 歲"},zone:{y:"0–2 歲",g:"2–4 歲",b:"4–6 歲"}}
+};
+let lang="vi";
+try{ const sv=localStorage.getItem("lang"); if(sv==="zh"||sv==="vi") lang=sv; }catch(e){}
+const T=()=>UI[lang];
+
+const ZONES = ["all","y","g","b"];
+const state = {zone:"all", q:"", onlyAvail:false, items:[], live:false, loaded:false, time:""};
 
 function zoneKey(z){ z=z||""; if(z.includes("0-2")||z.includes("🟡"))return "y"; if(z.includes("2-4")||z.includes("🟢"))return "g"; if(z.includes("4-6")||z.includes("🔵"))return "b"; return "b"; }
-function zoneLabel(k){ return {y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi"}[k]; }
+function zoneLabel(k){ return T().zone[k]; }
 
 function parseCSV(text){
   const rows=[]; let row=[], f="", q=false;
@@ -177,9 +228,15 @@ function parseCSV(text){
 }
 
 function lookupBlurb(title, series){
-  if(BOOKS[title]) return BOOKS[title];
-  for(const k in SERIES){ if((series||"").startsWith(k)||(title||"").startsWith(k)) return SERIES[k]; }
+  const B=lang==="zh"?BOOKS_ZH:BOOKS, S=lang==="zh"?SERIES_ZH:SERIES;
+  if(B[title]) return B[title];
+  for(const k in S){ if((series||"").startsWith(k)||(title||"").startsWith(k)) return S[k]; }
   return ["",""];
+}
+function seriesName(ser){
+  if(lang!=="zh") return ser;
+  for(const k in SERIES_NAME_ZH){ if(ser.startsWith(k)) return SERIES_NAME_ZH[k]; }
+  return ser;
 }
 
 function groupRows(rows){
@@ -208,11 +265,12 @@ function el(tag,cls,text){ const e=document.createElement(tag); if(cls)e.classNa
 
 function render(){
   const list=document.getElementById("list"); list.textContent="";
+  if(!state.loaded){ list.appendChild(el("p","empty",T().loading)); return; }
   const q=state.q.trim().toLowerCase();
-  let items=state.items.filter(it=>(state.zone==="all"||it.zone===state.zone)&&(!q||it.title.toLowerCase().includes(q)||it.series.toLowerCase().includes(q)));
+  let items=state.items.filter(it=>(state.zone==="all"||it.zone===state.zone)&&(!q||it.title.toLowerCase().includes(q)||it.series.toLowerCase().includes(q)||(TITLES_ZH[it.title]||"").includes(q)));
   if(state.onlyAvail&&state.live) items=items.filter(it=>it.avail>0);
   items.sort((a,b)=>(b.avail>0)-(a.avail>0)||b.count-a.count||a.title.localeCompare(b.title,"vi"));
-  if(!items.length){ list.appendChild(el("p","empty","Không tìm thấy sách phù hợp.")); return; }
+  if(!items.length){ list.appendChild(el("p","empty",T().empty)); return; }
   for(const it of items){
     const [desc,tip]=lookupBlurb(it.title,it.series);
     const card=el("article","card z-"+it.zone);
@@ -223,20 +281,22 @@ function render(){
     const top=el("div","top");
     top.appendChild(el("span","zone",zoneLabel(it.zone)));
     let st;
-    if(!state.live||!it.known) st=el("span","status st-na","Chưa rõ");
-    else if(it.avail>0) st=el("span","status st-ok", it.copies>1?`Còn ${it.avail}/${it.copies} cuốn`:"Còn sách");
-    else st=el("span","status st-out","Đang được mượn");
+    if(!state.live||!it.known) st=el("span","status st-na",T().unknown);
+    else if(it.avail>0) st=el("span","status st-ok",T().avail(it.avail,it.copies));
+    else st=el("span","status st-out",T().out);
     top.appendChild(st);
     body.appendChild(top);
-    body.appendChild(el("h2",null,it.title.replace(/^Storytime – /,"")));
+    const viTitle=it.title.replace(/^Storytime – /,"");
+    body.appendChild(el("h2",null,lang==="zh"&&TITLES_ZH[it.title]?TITLES_ZH[it.title]:viTitle));
     const ser=it.series||(it.title.startsWith("Storytime")?"Storytime":"");
-    if(ser) body.appendChild(el("div","series",ser));
+    const serTxt=seriesName(ser), zhT=lang==="zh"&&TITLES_ZH[it.title];
+    if(zhT||ser) body.appendChild(el("div","series",[zhT?viTitle:"",serTxt].filter(Boolean).join(" · ")));
     if(desc) body.appendChild(el("p","desc",desc));
     if(tip) body.appendChild(el("div","tip","💡 "+tip));
     const meta=el("div","meta");
-    meta.appendChild(el("span",null,it.codes.length?"Mã: "+it.codes.join(", "):""));
-    if(it.count>=CONFIG.hotCount) meta.appendChild(el("span","hot",`⭐ Được yêu thích · ${it.count} lượt`));
-    else if(it.count>0) meta.appendChild(el("span",null,`${it.count} lượt mượn`));
+    meta.appendChild(el("span",null,it.codes.length?T().code+it.codes.join(", "):""));
+    if(it.count>=CONFIG.hotCount) meta.appendChild(el("span","hot",T().hot(it.count)));
+    else if(it.count>0) meta.appendChild(el("span",null,T().cnt(it.count)));
     body.appendChild(meta);
     wrap.appendChild(body); card.appendChild(wrap); list.appendChild(card);
   }
@@ -246,25 +306,25 @@ function renderStats(){
   const s=document.getElementById("stats"); s.textContent="";
   const total=state.items.reduce((a,b)=>a+b.copies,0);
   const add=(n,t)=>{const d=el("div","stat"); d.appendChild(el("b",null,String(n))); d.appendChild(document.createTextNode(" "+t)); s.appendChild(d);};
-  add(total,"cuốn sách");
+  add(total,T().books);
   if(state.live){
     const avail=state.items.reduce((a,b)=>a+b.avail,0);
-    add(avail,"cuốn đang còn");
-    add(state.items.reduce((a,b)=>a+b.count,0),"lượt đã mượn");
+    add(avail,T().left);
+    add(state.items.reduce((a,b)=>a+b.count,0),T().borrowed);
   }
 }
 
 function renderHow(){
   const h=document.getElementById("how"); h.textContent="";
-  h.appendChild(el("b",null,"Muốn mượn? "));
-  h.appendChild(document.createTextNode("Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần."));
+  h.appendChild(el("b",null,T().howB));
+  h.appendChild(document.createTextNode(T().how));
 }
 
 function renderZones(){
   const z=document.getElementById("zones"); z.textContent="";
-  for(const it of ZONES){
-    const b=el("button","chip",it.label); b.type="button"; b.setAttribute("aria-pressed",String(state.zone===it.key));
-    b.onclick=()=>{state.zone=it.key; renderZones(); render();};
+  for(const k of ZONES){
+    const b=el("button","chip",T().zones[k]); b.type="button"; b.setAttribute("aria-pressed",String(state.zone===k));
+    b.onclick=()=>{state.zone=k; renderZones(); render();};
     z.appendChild(b);
   }
 }
@@ -277,18 +337,33 @@ async function load(){
     const items=groupRows(rows);
     if(!items.length) throw new Error("empty");
     state.items=items; state.live=true;
-    document.getElementById("foot").textContent="Cập nhật lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})+". Tình trạng sách có thể chậm vài phút.";
+    state.time=new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"});
   }catch(e){
     state.items=fallbackItems(); state.live=false;
-    const n=document.getElementById("notice"); n.hidden=false;
-    n.firstElementChild.textContent="Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.";
-  }
-  renderStats(); render();
+      }
+  state.loaded=true; applyLang();
 }
 
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value; render();});
 document.getElementById("onlyAvail").addEventListener("change",e=>{state.onlyAvail=e.target.checked; render();});
-renderZones(); renderHow(); load();
+function applyLang(){
+  const t=T();
+  document.documentElement.lang=lang==="zh"?"zh-Hant":"vi";
+  document.getElementById("h1").textContent=t.h1;
+  document.getElementById("sub").textContent=t.sub;
+  document.getElementById("onlyLbl").textContent=t.only;
+  const q=document.getElementById("q"); q.placeholder=t.search; q.setAttribute("aria-label",t.search);
+  document.getElementById("lang").textContent=t.btn;
+  const n=document.getElementById("notice"); n.hidden=!(state.loaded&&!state.live); n.firstElementChild.textContent=t.notice;
+  document.getElementById("foot").textContent=state.live?t.foot(state.time):"";
+  renderHow(); renderZones(); renderStats(); render();
+}
+document.getElementById("lang").addEventListener("click",()=>{
+  lang=lang==="vi"?"zh":"vi";
+  try{ localStorage.setItem("lang",lang); }catch(e){}
+  applyLang();
+});
+applyLang(); load();
 </script>
 </body>
 </html>
