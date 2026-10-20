@@ -46,6 +46,9 @@ h2{font-size:17px;line-height:1.3;margin:2px 0 0}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px}
 .notice{max-width:960px;margin:0 auto;padding:0 16px}
 .notice div{background:var(--out-soft);color:var(--out);border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+.wrap{display:flex;gap:12px;flex:1;padding:12px 12px 0 12px}
+.cover{width:92px;height:92px;flex:0 0 92px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#f1ede7}
+.wrap .body{padding:0 0 14px;min-width:0}
 footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:13px}
 </style>
 </head>
@@ -115,6 +118,39 @@ const SERIES = {
   "Storytime": ["Truyện tranh ngắn giúp bé rèn luyện thói quen và tính cách tốt.", "Đọc xong hỏi bé: “Con thích nhân vật nào?”"]
 };
 
+const COVERS = {
+  "Ú òa mở ra – Phát triển nhận thức": "covers/01.jpg",
+  "Con thích chơi với bạn ấy lắm": "covers/02.jpg",
+  "Tớ cũng muốn đứng tè": "covers/03.jpg",
+  "Nếu con là con trai": "covers/04.jpg",
+  "Con được sinh ra từ đâu": "covers/05.jpg",
+  "Tớ không ti mẹ nữa": "covers/06.jpg",
+  "Con tắm cùng bố được không": "covers/07.jpg",
+  "Đừng chạm vào cháu": "covers/08.jpg",
+  "Con muốn ngủ một mình": "covers/09.jpg",
+  "Vì sao cần ăn rau": "covers/10.jpg",
+  "Vì sao bị ốm": "covers/11.jpg",
+  "Vì sao cần biết đọc": "covers/12.jpg",
+  "Vì sao phải đi ngủ": "covers/13.jpg",
+  "Vì sao khủng long": "covers/14.jpg",
+  "Vì sao trời đổ mưa": "covers/15.jpg",
+  "Vì sao ngày và đêm": "covers/16.jpg",
+  "Vì sao nên nghe lời": "covers/17.jpg",
+  "Vì sao nước biển mặn": "covers/18.jpg",
+  "Vì sao ong kêu vo ve": "covers/19.jpg",
+  "Khả năng thuyết phục": "covers/20.jpg",
+  "Storytime – Nhím con vào lớp một": "covers/21.jpg",
+  "Storytime – Chớ mắc mưu sư tử": "covers/22.jpg",
+  "Storytime – Chiếc gối hoàn hảo của khỉ con": "covers/23.jpg",
+  "Storytime – Bác gấu ốm rồi": "covers/24.jpg",
+  "Storytime – Khủng long tập viết sách": "covers/25.jpg",
+  "Storytime – Món quà dành tặng thỏ con": "covers/26.jpg",
+  "Storytime – Vịt con thoát nạn": "covers/27.jpg",
+  "Storytime – Chim cánh cụt dũng cảm": "covers/28.jpg",
+  "Storytime – Sói xám đã biết xem giờ": "covers/29.jpg",
+  "Storytime – Điều ước của chuột chũi": "covers/30.jpg"
+};
+
 const ZONES = [
   {key:"all", label:"Tất cả"},
   {key:"y", label:"🟡 0–2 tuổi"},
@@ -181,6 +217,8 @@ function render(){
     const [desc,tip]=lookupBlurb(it.title,it.series);
     const card=el("article","card z-"+it.zone);
     card.appendChild(el("div","band"));
+    const wrap=el("div","wrap");
+    if(COVERS[it.title]){ const im=el("img","cover"); im.src=COVERS[it.title]; im.alt=it.title; im.loading="lazy"; im.width=92; im.height=92; wrap.appendChild(im); }
     const body=el("div","body");
     const top=el("div","top");
     top.appendChild(el("span","zone",zoneLabel(it.zone)));
@@ -200,7 +238,7 @@ function render(){
     if(it.count>=CONFIG.hotCount) meta.appendChild(el("span","hot",`⭐ Được yêu thích · ${it.count} lượt`));
     else if(it.count>0) meta.appendChild(el("span",null,`${it.count} lượt mượn`));
     body.appendChild(meta);
-    card.appendChild(body); list.appendChild(card);
+    wrap.appendChild(body); card.appendChild(wrap); list.appendChild(card);
   }
 }
 
