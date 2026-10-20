@@ -15,6 +15,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Be Vietnam Pr
 header{padding:28px 16px 18px;max-width:960px;margin:0 auto;position:relative}
 header h1{padding-right:104px}
 .lang{position:absolute;top:22px;right:16px;min-height:44px;min-width:88px;padding:0 14px;border:1px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);font-weight:600;font-size:15px;font-family:inherit;cursor:pointer}
+.guide{display:block;margin-top:8px;min-height:44px;line-height:44px;color:var(--accent);font-weight:700;text-decoration:none}
 .lang:active{background:var(--y-soft)}
 h1{font-size:26px;line-height:1.25;margin:0 0 6px}
 .sub{color:var(--muted);margin:0}
@@ -242,11 +243,11 @@ const TITLES_ZH = {
   "Tò Mò Muốn Biết 2 –TRONG TỔ KIẾN":"Tò Mò 好奇想知道・蟻窩裡"
 };
 const UI = {
-  vi:{h1:"Tủ sách cho con 📚",sub:"Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.",howB:"Muốn mượn? ",how:"Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần.",books:"cuốn sách",left:"cuốn đang còn",borrowed:"lượt đã mượn",search:"Tìm tên sách…",only:"Còn sách",unknown:"Chưa rõ",avail:(a,c)=>c>1?`Còn ${a}/${c} cuốn`:"Còn sách",out:"Đang được mượn",code:"Mã: ",hot:n=>`⭐ Được yêu thích · ${n} lượt`,cnt:n=>`${n} lượt mượn`,empty:"Không tìm thấy sách phù hợp.",loading:"Đang tải danh sách…",notice:"Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.",foot:t=>`Cập nhật lúc ${t}. Tình trạng sách có thể chậm vài phút.`,btn:"中文",zones:{all:"Tất cả",y:"🟡 0–2 tuổi",g:"🟢 2–4 tuổi",b:"🔵 4–6 tuổi"},zone:{y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi"}},
-  zh:{h1:"給孩子的書櫃 📚",sub:"Lovetex 員工孩子的免費書籍。不用押金，不收費。",howB:"想借書？",how:"到辦公室借書，下班順路來就可以。借期 2 週，可續借 1 次。",books:"本書",left:"本還在",borrowed:"次已借出",search:"搜尋書名…",only:"還有書",unknown:"未確定",avail:(a,c)=>c>1?`還有 ${a}/${c} 本`:"還有書",out:"已被借走",code:"編號：",hot:n=>`⭐ 很受歡迎 · 被借 ${n} 次`,cnt:n=>`被借 ${n} 次`,empty:"找不到符合的書。",loading:"載入書單中…",notice:"暫時無法載入借閱狀況。書單仍可瀏覽，請到辦公室詢問書是否還在。",foot:t=>`更新時間 ${t}。借閱狀況可能延遲幾分鐘。`,btn:"Tiếng Việt",zones:{all:"全部",y:"🟡 0–2 歲",g:"🟢 2–4 歲",b:"🔵 4–6 歲"},zone:{y:"0–2 歲",g:"2–4 歲",b:"4–6 歲"}}
+  vi:{h1:"Tủ sách cho con 📚",sub:"Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.",guide:"Đọc cùng con thế nào? →",howB:"Muốn mượn? ",how:"Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần.",books:"cuốn sách",left:"cuốn đang còn",borrowed:"lượt đã mượn",search:"Tìm tên sách…",only:"Còn sách",unknown:"Chưa rõ",avail:(a,c)=>c>1?`Còn ${a}/${c} cuốn`:"Còn sách",out:"Đang được mượn",code:"Mã: ",hot:n=>`⭐ Được yêu thích · ${n} lượt`,cnt:n=>`${n} lượt mượn`,empty:"Không tìm thấy sách phù hợp.",loading:"Đang tải danh sách…",notice:"Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.",foot:t=>`Cập nhật lúc ${t}. Tình trạng sách có thể chậm vài phút.`,btn:"中文",zones:{all:"Tất cả",y:"🟡 0–2 tuổi",g:"🟢 2–4 tuổi",b:"🔵 4–6 tuổi"},zone:{y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi"}},
+  zh:{h1:"給孩子的書櫃 📚",sub:"Lovetex 員工孩子的免費書籍。不用押金，不收費。",guide:"怎麼陪孩子讀？→",howB:"想借書？",how:"到辦公室借書，下班順路來就可以。借期 2 週，可續借 1 次。",books:"本書",left:"本還在",borrowed:"次已借出",search:"搜尋書名…",only:"還有書",unknown:"未確定",avail:(a,c)=>c>1?`還有 ${a}/${c} 本`:"還有書",out:"已被借走",code:"編號：",hot:n=>`⭐ 很受歡迎 · 被借 ${n} 次`,cnt:n=>`被借 ${n} 次`,empty:"找不到符合的書。",loading:"載入書單中…",notice:"暫時無法載入借閱狀況。書單仍可瀏覽，請到辦公室詢問書是否還在。",foot:t=>`更新時間 ${t}。借閱狀況可能延遲幾分鐘。`,btn:"Tiếng Việt",zones:{all:"全部",y:"🟡 0–2 歲",g:"🟢 2–4 歲",b:"🔵 4–6 歲"},zone:{y:"0–2 歲",g:"2–4 歲",b:"4–6 歲"}}
 };
 let lang="vi";
-try{ const sv=localStorage.getItem("lang"); if(sv==="zh"||sv==="vi") lang=sv; }catch(e){}
+if(new URLSearchParams(location.search).get("lang")==="zh") lang="zh";
 const T=()=>UI[lang];
 
 const ZONES = ["all","y","g","b"];
@@ -361,6 +362,7 @@ function renderHow(){
   const h=document.getElementById("how"); h.textContent="";
   h.appendChild(el("b",null,T().howB));
   h.appendChild(document.createTextNode(T().how));
+  const g=el("a","guide",T().guide); g.href="guide.html"+(lang==="zh"?"?lang=zh":""); h.appendChild(g);
 }
 
 function renderZones(){
@@ -403,7 +405,6 @@ function applyLang(){
 }
 document.getElementById("lang").addEventListener("click",()=>{
   lang=lang==="vi"?"zh":"vi";
-  try{ localStorage.setItem("lang",lang); }catch(e){}
   applyLang();
 });
 applyLang(); load();
