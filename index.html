@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tủ sách Lovetex</title>
+<style>
+:root{
+  --bg:#fbf7f0; --card:#ffffff; --ink:#2b2622; --muted:#7a6f66; --line:#ece4d8;
+  --y:#f2b705; --y-soft:#fff4cc; --g:#3a9d5d; --g-soft:#e2f4e8; --b:#2f6fd0; --b-soft:#e3edfb;
+  --ok:#2e8b57; --ok-soft:#e3f5ea; --out:#b5543c; --out-soft:#fbe9e4; --accent:#d9603b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:28px 16px 18px;max-width:960px;margin:0 auto}
+h1{font-size:26px;line-height:1.25;margin:0 0 6px}
+.sub{color:var(--muted);margin:0}
+.stats{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:14px}
+.stat b{font-size:18px}
+.how{max-width:960px;margin:0 auto 6px;padding:0 16px}
+.how div{background:#fff;border:1px dashed var(--accent);border-radius:12px;padding:10px 14px;font-size:15px}
+.controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px;max-width:960px;margin:0 auto}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row{display:flex;gap:8px;margin-top:8px}
+input[type=search]{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:15px;background:#fff}
+label.toggle{display:flex;align-items:center;gap:6px;font-size:14px;white-space:nowrap}
+main{max-width:960px;margin:0 auto;padding:6px 16px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.band{height:6px}
+.z-y .band{background:var(--y)} .z-g .band{background:var(--g)} .z-b .band{background:var(--b)}
+.body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.zone{font-size:12px;font-weight:600;border-radius:6px;padding:2px 8px;white-space:nowrap}
+.z-y .zone{background:var(--y-soft);color:#7a5a00} .z-g .zone{background:var(--g-soft);color:#1f6b3b} .z-b .zone{background:var(--b-soft);color:#1d4f9a}
+.status{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.st-ok{background:var(--ok-soft);color:var(--ok)} .st-out{background:var(--out-soft);color:var(--out)} .st-na{background:#f1ede7;color:var(--muted)}
+h2{font-size:17px;line-height:1.3;margin:2px 0 0}
+.series{font-size:13px;color:var(--muted)}
+.desc{font-size:15px;margin:2px 0 0}
+.tip{font-size:14px;background:#faf6ef;border-radius:8px;padding:6px 10px;margin-top:auto}
+.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.hot{color:var(--accent);font-weight:600}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px}
+.notice{max-width:960px;margin:0 auto;padding:0 16px}
+.notice div{background:var(--out-soft);color:var(--out);border-radius:10px;padding:8px 12px;font-size:14px;margin-top:8px}
+footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tủ sách cho con 📚</h1>
+  <p class="sub">Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.</p>
+  <div class="stats" id="stats"></div>
+</header>
+<section class="how"><div id="how"></div></section>
+<div class="notice" id="notice" hidden><div></div></div>
+<div class="controls">
+  <div class="chips" id="zones" role="group" aria-label="Lọc theo độ tuổi"></div>
+  <div class="row">
+    <input type="search" id="q" placeholder="Tìm tên sách…" aria-label="Tìm tên sách">
+    <label class="toggle"><input type="checkbox" id="onlyAvail"> Còn sách</label>
+  </div>
+</div>
+<main id="list"><p class="empty">Đang tải danh sách…</p></main>
+<footer id="foot"></footer>
+
+<script>
+/* ===== Cấu hình / 設定 ===== */
+const CONFIG = {
+  // Google Sheet「書目」分頁發布的 CSV 連結
+  csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6-XrRiUvj1rEjj4sxCW5LOuwSVUCCEoOy7weS_jrhOP9y9QzunjF6kiROzK1IJQNzIegpSCXOEf8E/pub?gid=390963957&single=true&output=csv",
+  hrName: "chị Lan (HR)",          // 接預約的人，例如 "chị Lan (HR)"
+  zaloPhone: "0901234567",         // 選填：Zalo 電話，例如 "0901234567"，填了會出現一鍵聯絡按鈕
+  hotCount: 3            // 借閱次數達到幾次顯示「Được yêu thích」
+};
+
+/* ===== Giới thiệu sách / 書的簡介（依書名對應；找不到時用系列簡介） ===== */
+const BOOKS = {
+  "Ú òa mở ra – Phát triển nhận thức": ["Sách lật mở nhiều hình màu sắc. Bé tự lật từng trang để tìm con vật, đồ vật quen thuộc.", "Hỏi bé “Cái gì đây nhỉ?” rồi mới lật ra cùng nhau."],
+  "Con thích chơi với bạn ấy lắm": ["Bé học cách làm bạn và chơi cùng các bạn khác một cách vui vẻ, tôn trọng.", "Hỏi bé: “Ở lớp con thích chơi với bạn nào?”"],
+  "Tớ cũng muốn đứng tè": ["Giải thích nhẹ nhàng vì sao bạn trai và bạn gái đi vệ sinh khác nhau.", "Trả lời thật tự nhiên khi bé hỏi, không cần ngại."],
+  "Nếu con là con trai": ["Bé tìm hiểu mình là bạn trai hay bạn gái, và mỗi bạn đều đặc biệt.", "Hỏi bé: “Con thích điều gì nhất ở bản thân?”"],
+  "Con được sinh ra từ đâu": ["Trả lời câu hỏi bé nào cũng từng hỏi, bằng lời lẽ phù hợp với tuổi.", "Đọc chậm, để bé hỏi thêm bất cứ lúc nào."],
+  "Tớ không ti mẹ nữa": ["Giúp bé chuẩn bị tâm lý khi cai sữa mẹ, nhẹ nhàng và không sợ hãi.", "Ôm bé khi đọc, khen bé đã lớn rồi."],
+  "Con tắm cùng bố được không": ["Bé học về sự riêng tư của cơ thể khi lớn dần lên.", "Nói với bé: “Cơ thể là của con, con được quyền giữ riêng.”"],
+  "Đừng chạm vào cháu": ["Dạy bé nói “Không!” và kể với ba mẹ khi có ai chạm vào vùng riêng tư. Cuốn rất nên đọc cùng con.", "Tập cùng bé nói to: “Đừng chạm vào cháu!”"],
+  "Con muốn ngủ một mình": ["Giúp bé tự tin khi bắt đầu ngủ riêng.", "Hợp đọc trước giờ đi ngủ."],
+  "Vì sao cần ăn rau": ["Rau giúp cơ thể khỏe mạnh như thế nào. Đọc xong bé dễ chịu ăn rau hơn.", "Cho bé chọn một loại rau trong bữa tối."],
+  "Vì sao bị ốm": ["Vi trùng là gì, vì sao mình bị ốm và làm sao để mau khỏe.", "Cùng bé rửa tay sau khi đọc."],
+  "Vì sao cần biết đọc": ["Biết đọc giúp bé tự khám phá thế giới trong sách.", "Chỉ vào chữ khi đọc để bé làm quen mặt chữ."],
+  "Vì sao phải đi ngủ": ["Ngủ đủ giúp bé lớn nhanh và vui cả ngày.", "Hợp đọc ngay trước giờ ngủ."],
+  "Vì sao khủng long": ["Khủng long là ai, sống ra sao và vì sao không còn nữa.", "Cùng bé giả tiếng khủng long gầm."],
+  "Vì sao trời đổ mưa": ["Nước bay lên thành mây rồi rơi xuống thành mưa.", "Lần sau trời mưa, hỏi bé: “Mưa từ đâu tới nhỉ?”"],
+  "Vì sao ngày và đêm": ["Vì sao có ban ngày sáng và ban đêm tối.", "Dùng đèn pin và quả bóng để làm thử cùng bé."],
+  "Vì sao nên nghe lời": ["Vì sao nên lắng nghe ba mẹ, kể bằng tình huống gần gũi.", "Hỏi bé: “Nếu là con, con sẽ làm gì?”"],
+  "Vì sao nước biển mặn": ["Muối trong nước biển từ đâu mà có.", "Cho bé nếm thử chút nước muối để so sánh."],
+  "Vì sao ong kêu vo ve": ["Tiếng vo ve đến từ đôi cánh đập rất nhanh của ong.", "Cùng bé bắt chước tiếng “vo ve”."],
+  "Khả năng thuyết phục": ["Bé học cách nói để người khác hiểu và đồng ý với mình, lịch sự và tự tin.", "Hỏi bé: “Con sẽ nói thế nào để bạn cho mượn đồ chơi?”"],
+  "Storytime – Nhím con vào lớp một": ["Nhím con hồi hộp ngày đầu đi học. Hợp cho bé sắp vào lớp mới.", "Hỏi bé: “Ngày đầu đi học con thấy thế nào?”"],
+  "Storytime – Chớ mắc mưu sư tử": ["Các bạn nhỏ thông minh không mắc bẫy sư tử. Bài học về cảnh giác.", "Dừng giữa truyện, hỏi bé: “Con đoán sư tử định làm gì?”"],
+  "Storytime – Chiếc gối hoàn hảo của khỉ con": ["Khỉ con đi tìm chiếc gối thật vừa ý.", "Hỏi bé: “Gối của con có gì đặc biệt?”"],
+  "Storytime – Bác gấu ốm rồi": ["Bạn bè cùng chăm sóc bác gấu bị ốm. Bài học về quan tâm người khác.", "Hỏi bé: “Khi ba mẹ mệt, con có thể làm gì?”"],
+  "Storytime – Khủng long tập viết sách": ["Khủng long kiên trì tập viết, dù lúc đầu chưa giỏi.", "Khen bé khi bé cố gắng làm một việc khó."],
+  "Storytime – Món quà dành tặng thỏ con": ["Ý nghĩa của món quà và niềm vui khi sẻ chia.", "Hỏi bé: “Con muốn tặng ai một món quà?”"],
+  "Storytime – Vịt con thoát nạn": ["Vịt con bình tĩnh vượt qua nguy hiểm.", "Nói với bé phải làm gì khi bị lạc ba mẹ."],
+  "Storytime – Chim cánh cụt dũng cảm": ["Chim cánh cụt nhỏ vượt qua nỗi sợ của mình.", "Hỏi bé: “Con sợ điều gì nhất?”"],
+  "Storytime – Sói xám đã biết xem giờ": ["Học xem đồng hồ cùng sói xám.", "Chỉ đồng hồ trong nhà và hỏi bé “Mấy giờ rồi?”"],
+  "Storytime – Điều ước của chuột chũi": ["Chuột chũi và điều ước nhỏ của mình.", "Hỏi bé: “Nếu được ước một điều, con ước gì?”"]
+};
+const SERIES = {
+  "Những bài học đầu tiên về Giới tính": ["Bộ sách giúp bé hiểu về cơ thể và biết tự bảo vệ mình, kể bằng câu chuyện nhẹ nhàng.", "Đọc cùng con, trả lời tự nhiên khi bé hỏi."],
+  "Khám phá kiến thức – Vì sao": ["Sách hỏi – đáp ngắn cho bé hay hỏi “Vì sao?”.", "Hỏi bé “Con đoán vì sao?” trước khi đọc câu trả lời."],
+  "Tò Mò Muốn Biết": ["Sách lật mở nhiều lớp, bé tự lật để khám phá kiến thức về thế giới.", "Lật nhẹ tay cùng bé nhé, các trang lật dễ rách."],
+  "Storytime": ["Truyện tranh ngắn giúp bé rèn luyện thói quen và tính cách tốt.", "Đọc xong hỏi bé: “Con thích nhân vật nào?”"]
+};
+
+const ZONES = [
+  {key:"all", label:"Tất cả"},
+  {key:"y", label:"🟡 0–2 tuổi"},
+  {key:"g", label:"🟢 2–4 tuổi"},
+  {key:"b", label:"🔵 4–6 tuổi"}
+];
+const state = {zone:"all", q:"", onlyAvail:false, items:[], live:false};
+
+function zoneKey(z){ z=z||""; if(z.includes("0-2")||z.includes("🟡"))return "y"; if(z.includes("2-4")||z.includes("🟢"))return "g"; if(z.includes("4-6")||z.includes("🔵"))return "b"; return "b"; }
+function zoneLabel(k){ return {y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi"}[k]; }
+
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'){ row.push(f); rows.push(row); row=[]; f=""; }
+    else if(c!=='\r') f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+
+function lookupBlurb(title, series){
+  if(BOOKS[title]) return BOOKS[title];
+  for(const k in SERIES){ if((series||"").startsWith(k)||(title||"").startsWith(k)) return SERIES[k]; }
+  return ["",""];
+}
+
+function groupRows(rows){
+  // gộp các cuốn trùng tên thành một thẻ
+  const map=new Map();
+  for(const r of rows){
+    const [code,title,series,zone,status,count]=r;
+    if(!code||!title) continue;
+    const key=title.trim();
+    const out=/Đang mượn|借出/.test(status||"");
+    const known=!!status;
+    if(!map.has(key)) map.set(key,{title:key,series:(series||"").trim(),zone:zoneKey(zone),copies:0,avail:0,known:false,count:0,codes:[]});
+    const g=map.get(key);
+    g.copies++; if(known){g.known=true; if(!out) g.avail++;}
+    g.count+=parseInt(count,10)||0; g.codes.push(code.trim());
+  }
+  return [...map.values()];
+}
+
+function fallbackItems(){
+  return Object.keys(BOOKS).map(t=>({title:t,series:"",zone:t.startsWith("Ú òa")?"y":(SERIES_TITLES_G.has(t)?"g":"b"),copies:t==="Khả năng thuyết phục"?2:1,avail:0,known:false,count:0,codes:[]}));
+}
+const SERIES_TITLES_G=new Set(["Con thích chơi với bạn ấy lắm","Tớ cũng muốn đứng tè","Nếu con là con trai","Con được sinh ra từ đâu","Tớ không ti mẹ nữa","Con tắm cùng bố được không","Đừng chạm vào cháu","Con muốn ngủ một mình"]);
+
+function el(tag,cls,text){ const e=document.createElement(tag); if(cls)e.className=cls; if(text!=null)e.textContent=text; return e; }
+
+function render(){
+  const list=document.getElementById("list"); list.textContent="";
+  const q=state.q.trim().toLowerCase();
+  let items=state.items.filter(it=>(state.zone==="all"||it.zone===state.zone)&&(!q||it.title.toLowerCase().includes(q)||it.series.toLowerCase().includes(q)));
+  if(state.onlyAvail&&state.live) items=items.filter(it=>it.avail>0);
+  items.sort((a,b)=>(b.avail>0)-(a.avail>0)||b.count-a.count||a.title.localeCompare(b.title,"vi"));
+  if(!items.length){ list.appendChild(el("p","empty","Không tìm thấy sách phù hợp.")); return; }
+  for(const it of items){
+    const [desc,tip]=lookupBlurb(it.title,it.series);
+    const card=el("article","card z-"+it.zone);
+    card.appendChild(el("div","band"));
+    const body=el("div","body");
+    const top=el("div","top");
+    top.appendChild(el("span","zone",zoneLabel(it.zone)));
+    let st;
+    if(!state.live||!it.known) st=el("span","status st-na","Chưa rõ");
+    else if(it.avail>0) st=el("span","status st-ok", it.copies>1?`Còn ${it.avail}/${it.copies} cuốn`:"Còn sách");
+    else st=el("span","status st-out","Đang được mượn");
+    top.appendChild(st);
+    body.appendChild(top);
+    body.appendChild(el("h2",null,it.title.replace(/^Storytime – /,"")));
+    const ser=it.series||(it.title.startsWith("Storytime")?"Storytime":"");
+    if(ser) body.appendChild(el("div","series",ser));
+    if(desc) body.appendChild(el("p","desc",desc));
+    if(tip) body.appendChild(el("div","tip","💡 "+tip));
+    const meta=el("div","meta");
+    meta.appendChild(el("span",null,it.codes.length?"Mã: "+it.codes.join(", "):""));
+    if(it.count>=CONFIG.hotCount) meta.appendChild(el("span","hot",`⭐ Được yêu thích · ${it.count} lượt`));
+    else if(it.count>0) meta.appendChild(el("span",null,`${it.count} lượt mượn`));
+    body.appendChild(meta);
+    card.appendChild(body); list.appendChild(card);
+  }
+}
+
+function renderStats(){
+  const s=document.getElementById("stats"); s.textContent="";
+  const total=state.items.reduce((a,b)=>a+b.copies,0);
+  const add=(n,t)=>{const d=el("div","stat"); d.appendChild(el("b",null,String(n))); d.appendChild(document.createTextNode(" "+t)); s.appendChild(d);};
+  add(total,"cuốn sách");
+  if(state.live){
+    const avail=state.items.reduce((a,b)=>a+b.avail,0);
+    add(avail,"cuốn đang còn");
+    add(state.items.reduce((a,b)=>a+b.count,0),"lượt đã mượn");
+  }
+}
+
+function renderHow(){
+  const h=document.getElementById("how"); h.textContent="";
+  h.appendChild(el("b",null,"Muốn mượn? "));
+  h.appendChild(document.createTextNode(`Nhắn Zalo cho ${CONFIG.hrName} tên sách (hoặc mã sách). ${CONFIG.hrName} sẽ giữ sách cho anh chị, tan ca ghé lấy là được. Mượn 2 tuần, gia hạn được 1 lần.`));
+  if(CONFIG.zaloPhone){
+    const a=el("a",null," Nhắn Zalo ngay →"); a.href="https://zalo.me/"+CONFIG.zaloPhone.replace(/\D/g,""); a.target="_blank"; a.rel="noopener"; a.style.color="var(--accent)"; a.style.fontWeight="600";
+    h.appendChild(a);
+  }
+}
+
+function renderZones(){
+  const z=document.getElementById("zones"); z.textContent="";
+  for(const it of ZONES){
+    const b=el("button","chip",it.label); b.type="button"; b.setAttribute("aria-pressed",String(state.zone===it.key));
+    b.onclick=()=>{state.zone=it.key; renderZones(); render();};
+    z.appendChild(b);
+  }
+}
+
+async function load(){
+  try{
+    const res=await fetch(CONFIG.csvUrl+"&t="+Date.now(),{cache:"no-store"});
+    if(!res.ok) throw new Error(res.status);
+    const rows=parseCSV(await res.text()).slice(1);
+    const items=groupRows(rows);
+    if(!items.length) throw new Error("empty");
+    state.items=items; state.live=true;
+    document.getElementById("foot").textContent="Cập nhật lúc "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})+". Tình trạng sách có thể chậm vài phút.";
+  }catch(e){
+    state.items=fallbackItems(); state.live=false;
+    const n=document.getElementById("notice"); n.hidden=false;
+    n.firstElementChild.textContent="Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy hỏi "+CONFIG.hrName+" để biết sách còn hay không.";
+  }
+  renderStats(); render();
+}
+
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value; render();});
+document.getElementById("onlyAvail").addEventListener("change",e=>{state.onlyAvail=e.target.checked; render();});
+renderZones(); renderHow(); load();
+</script>
+</body>
+</html>
