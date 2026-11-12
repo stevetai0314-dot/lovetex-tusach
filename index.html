@@ -194,7 +194,8 @@ const BOOKS = {
   "Qụa và công": ["Truyện cổ tích Việt Nam: vì sao quạ có lông đen còn công lại có bộ lông đẹp.", "Hỏi bé: “Vì sao quạ lại bị đen?”"],
   "Sự tích Trâu vàng Hồ Tây": ["Truyện cổ tích Việt Nam kể về con trâu vàng và sự tích Hồ Tây ở Hà Nội.", "Nếu có dịp ra Hà Nội, dẫn bé đi xem Hồ Tây."],
   "Nghêu sò ốc hến": ["Truyện cổ tích Việt Nam vui nhộn, kể về những nhân vật lanh lợi.", "Cùng bé gọi tên các loài nghêu, sò, ốc, hến khi đi chợ."],
-  "Qủa bầu tiên": ["Cậu bé tốt bụng cứu chú chim én, được tặng hạt bầu tiên. Ở hiền thì gặp lành.", "Hỏi bé: “Con đã giúp đỡ ai chưa?”"]
+  "Qủa bầu tiên": ["Cậu bé tốt bụng cứu chú chim én, được tặng hạt bầu tiên. Ở hiền thì gặp lành.", "Hỏi bé: “Con đã giúp đỡ ai chưa?”"],
+  "Nuôi dạy bé trai theo cách mẹ Nhật": ["Sách cho ba mẹ: cách các bà mẹ Nhật nuôi dạy con trai tự lập, có trách nhiệm và biết quan tâm người khác.", "Chọn một cách nhỏ trong sách, thử áp dụng ở nhà trong tuần này."]
 };
 const SERIES = {
   "Những bài học đầu tiên về Giới tính": ["Bộ sách giúp bé hiểu về cơ thể và biết tự bảo vệ mình, kể bằng câu chuyện nhẹ nhàng.", "Đọc cùng con, trả lời tự nhiên khi bé hỏi."],
@@ -272,6 +273,7 @@ const COVERS = {
   "Sự tích Trâu vàng Hồ Tây": "covers/65.jpg",
   "Nghêu sò ốc hến": "covers/66.jpg",
   "Qủa bầu tiên": "covers/67.jpg",
+  "Nuôi dạy bé trai theo cách mẹ Nhật": "covers/69.jpg",
   "Doraemon truyện ngắn": "covers/68.jpg"
 };
 
@@ -342,7 +344,8 @@ const BOOKS_ZH = {
   "Qụa và công": ["越南民間故事：為什麼烏鴉全身黑，孔雀卻有漂亮的羽毛。", "問寶寶：「烏鴉為什麼變黑了？」"],
   "Sự tích Trâu vàng Hồ Tây": ["越南民間故事，講金牛和河內西湖的由來。", "有機會去河內，帶寶寶去看看西湖。"],
   "Nghêu sò ốc hến": ["有趣的越南民間故事，講一群機靈的角色。", "去市場時和寶寶一起認蛤蜊、蚌、螺和蜆。"],
-  "Qủa bầu tiên": ["善良的男孩救了燕子，得到仙葫蘆的種子。好心有好報。", "問寶寶：「你有幫助過別人嗎？」"]
+  "Qủa bầu tiên": ["善良的男孩救了燕子，得到仙葫蘆的種子。好心有好報。", "問寶寶：「你有幫助過別人嗎？」"],
+  "Nuôi dạy bé trai theo cách mẹ Nhật": ["給家長看的書：日本媽媽怎麼教養男孩，培養孩子獨立、有責任感、懂得體貼。", "挑一個書裡的小方法，這星期在家試試看。"]
 };
 const SERIES_ZH = {
   "Những bài học đầu tiên về Giới tính": ["這套書幫助寶寶認識身體、學會保護自己，用溫柔的故事說明。", "陪孩子一起讀，孩子發問時自然地回答。"],
@@ -392,7 +395,8 @@ const TITLES_ZH = {
   "Qụa và công":"烏鴉和孔雀",
   "Sự tích Trâu vàng Hồ Tây":"西湖金牛的傳說",
   "Nghêu sò ốc hến":"蛤蜊、蚌、螺和蜆",
-  "Qủa bầu tiên":"仙葫蘆"
+  "Qủa bầu tiên":"仙葫蘆",
+  "Nuôi dạy bé trai theo cách mẹ Nhật":"像日本媽媽那樣教養男孩"
 };
 const UI = {
   vi:{h1:"Tủ sách cho con 📚",sub:"Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.",guide:"Đọc cùng con thế nào? →",howB:"Muốn mượn? ",how:"Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần.",books:"cuốn sách",left:"cuốn đang còn",borrowed:"lượt đã mượn",search:"Tìm tên sách…",only:"Còn sách",unknown:"Chưa rõ",avail:(a,c)=>c>1?`Còn ${a}/${c} cuốn`:"Còn sách",out:"Đang được mượn",code:"Mã: ",hot:n=>`⭐ Được yêu thích · ${n} lượt`,cnt:n=>`${n} lượt mượn`,empty:"Không tìm thấy sách phù hợp.",loading:"Đang tải danh sách…",notice:"Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.",foot:t=>`Cập nhật lúc ${t}. Tình trạng sách có thể chậm vài phút.`,btn:"中文",zones:{all:"Tất cả",y:"🟡 0–2 tuổi",g:"🟢 2–4 tuổi",b:"🔵 4–6 tuổi",p:"🟣 6+ tuổi",r:"🔴 Cho ba mẹ"},zone:{y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi",p:"6+ tuổi",r:"Cho ba mẹ"},serTitle:"Doraemon – Truyện ngắn",serAvail:(a,c)=>`Còn ${a}/${c} tập`,serOpen:c=>`Xem ${c} tập →`,serRule:"📌 Mỗi lần mượn tối đa 3 tập. Trả xong mượn tiếp.",serOnly:"Chỉ xem tập còn sách",serOk:"Còn sách",serOut:"Đang mượn",vol:n=>`Tập ${n}`,close:"Đóng"},
@@ -487,7 +491,7 @@ function render(){
     body.appendChild(top);
     const viTitle=it.title.replace(/^Storytime – /,"");
     body.appendChild(el("h2",null,lang==="zh"&&TITLES_ZH[it.title]?TITLES_ZH[it.title]:viTitle));
-    const ser=it.series||(it.title.startsWith("Storytime")?"Storytime":"");
+    const ser=it.series&&it.series!==it.title?it.series:(it.title.startsWith("Storytime")?"Storytime":"");
     const serTxt=seriesName(ser), zhT=lang==="zh"&&TITLES_ZH[it.title];
     if(zhT||ser) body.appendChild(el("div","series",[zhT?viTitle:"",serTxt].filter(Boolean).join(" · ")));
     if(desc) body.appendChild(el("p","desc",desc));
