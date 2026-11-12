@@ -8,7 +8,7 @@
 <style>
 :root{
   --bg:#fbf7f0; --card:#ffffff; --ink:#2b2622; --muted:#7a6f66; --line:#ece4d8;
-  --y:#f2b705; --y-soft:#fff4cc; --g:#3a9d5d; --g-soft:#e2f4e8; --b:#2f6fd0; --b-soft:#e3edfb;
+  --y:#f2b705; --y-soft:#fff4cc; --g:#3a9d5d; --g-soft:#e2f4e8; --b:#2f6fd0; --b-soft:#e3edfb; --p:#8e5bd6; --p-soft:#efe6fb; --r:#d64545; --r-soft:#fde7e7;
   --ok:#2e8b57; --ok-soft:#e3f5ea; --out:#b5543c; --out-soft:#fbe9e4; --accent:#d9603b;
 }
 *{box-sizing:border-box}
@@ -38,11 +38,11 @@ label.toggle{display:flex;align-items:center;gap:6px;font-size:14px;white-space:
 main{max-width:960px;margin:0 auto;padding:6px 16px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .band{height:6px}
-.z-y .band{background:var(--y)} .z-g .band{background:var(--g)} .z-b .band{background:var(--b)}
+.z-y .band{background:var(--y)} .z-g .band{background:var(--g)} .z-b .band{background:var(--b)} .z-p .band{background:var(--p)} .z-r .band{background:var(--r)}
 .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
 .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
 .zone{font-size:12px;font-weight:600;border-radius:6px;padding:2px 8px;white-space:nowrap}
-.z-y .zone{background:var(--y-soft);color:#7a5a00} .z-g .zone{background:var(--g-soft);color:#1f6b3b} .z-b .zone{background:var(--b-soft);color:#1d4f9a}
+.z-y .zone{background:var(--y-soft);color:#7a5a00} .z-g .zone{background:var(--g-soft);color:#1f6b3b} .z-b .zone{background:var(--b-soft);color:#1d4f9a} .z-p .zone{background:var(--p-soft);color:#5b2f9e} .z-r .zone{background:var(--r-soft);color:#a12f2f}
 .status{font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap}
 .st-ok{background:var(--ok-soft);color:var(--ok)} .st-out{background:var(--out-soft);color:var(--out)} .st-na{background:#f1ede7;color:var(--muted)}
 h2{font-size:16px;line-height:1.3;margin:2px 0 0}
@@ -59,6 +59,30 @@ h2{font-size:16px;line-height:1.3;margin:2px 0 0}
 .cover{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
 .imgbox .status{position:absolute;left:8px;bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .wrap .body{padding:10px 12px 12px;min-width:0}
+.series-card{cursor:pointer;border-color:#d9c6f3}
+.series-card:hover,.series-card:focus-visible{box-shadow:0 4px 14px rgba(142,91,214,.22);outline:none}
+.rule{font-size:13px;background:var(--p-soft);color:#5b2f9e;border-radius:8px;padding:6px 10px}
+.open{display:block;text-align:center;background:var(--p);color:#fff;border-radius:8px;padding:9px;font-weight:700;font-size:14px;margin-top:4px}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:20;align-items:flex-end;justify-content:center}
+.sheet-bg.show{display:flex}
+.sheet{background:#fff;width:100%;max-width:720px;max-height:90vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px 24px}
+@media(min-width:720px){.sheet-bg{align-items:center}.sheet{border-radius:18px}}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sheet h3{margin:0;font-size:19px;line-height:1.3}
+.sheet .meta{justify-content:flex-start}
+.x{border:0;background:#f1ede7;border-radius:999px;width:44px;height:44px;font-size:22px;cursor:pointer;flex:0 0 auto;color:var(--ink)}
+.sheet .rule{margin:12px 0}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+.vols{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px;margin-top:8px}
+.vol{border-radius:10px;display:flex;flex-direction:column;align-items:center;padding:4px 4px 6px;font-weight:800;font-size:15px;border:2px solid transparent;line-height:1.2}
+.vol img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:6px;margin-bottom:4px;background:#f1ede7}
+.vol small{font-size:10px;font-weight:600;opacity:.8}
+.v-ok{background:var(--ok-soft);color:var(--ok);border-color:#bfe5cd}
+.v-out{background:#f1ede7;color:#a39a91}
+.v-out b{text-decoration:line-through}
+.v-out img{opacity:.35;filter:grayscale(1)}
+.v-na{background:#faf6ef;color:var(--muted)}
 footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:13px}
 </style>
 </head>
@@ -81,6 +105,18 @@ footer{max-width:960px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font
 </div>
 <main id="list"><p class="empty">Đang tải danh sách…</p></main>
 <footer id="foot"></footer>
+<div class="sheet-bg" id="sheetBg">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <div><h3 id="sheetTitle"></h3><div class="meta" id="sheetMeta"></div></div>
+      <button class="x" id="sheetClose" type="button" aria-label="Đóng">×</button>
+    </div>
+    <div class="rule" id="sheetRule"></div>
+    <div class="legend" id="sheetLegend"></div>
+    <label class="toggle"><input type="checkbox" id="sheetOnly"> <span id="sheetOnlyLbl"></span></label>
+    <div class="vols" id="sheetVols"></div>
+  </div>
+</div>
 
 <script>
 /* ===== Cấu hình / 設定 ===== */
@@ -164,7 +200,8 @@ const SERIES = {
   "Những bài học đầu tiên về Giới tính": ["Bộ sách giúp bé hiểu về cơ thể và biết tự bảo vệ mình, kể bằng câu chuyện nhẹ nhàng.", "Đọc cùng con, trả lời tự nhiên khi bé hỏi."],
   "Khám phá kiến thức – Vì sao": ["Sách hỏi – đáp ngắn cho bé hay hỏi “Vì sao?”.", "Hỏi bé “Con đoán vì sao?” trước khi đọc câu trả lời."],
   "Tò Mò Muốn Biết": ["Sách lật mở nhiều lớp, bé tự lật để khám phá kiến thức về thế giới.", "Lật nhẹ tay cùng bé nhé, các trang lật dễ rách."],
-  "Storytime": ["Truyện tranh ngắn giúp bé rèn luyện thói quen và tính cách tốt.", "Đọc xong hỏi bé: “Con thích nhân vật nào?”"]
+  "Storytime": ["Truyện tranh ngắn giúp bé rèn luyện thói quen và tính cách tốt.", "Đọc xong hỏi bé: “Con thích nhân vật nào?”"],
+  "Doraemon truyện ngắn": ["Bộ 45 tập. Mỗi tập là nhiều truyện ngắn vui về Nobita và chú mèo máy Doraemon đến từ tương lai.", "Đọc xong hỏi bé: “Nếu có một bảo bối, con muốn cái nào?”"]
 };
 
 const COVERS = {
@@ -234,7 +271,8 @@ const COVERS = {
   "Qụa và công": "covers/64.jpg",
   "Sự tích Trâu vàng Hồ Tây": "covers/65.jpg",
   "Nghêu sò ốc hến": "covers/66.jpg",
-  "Qủa bầu tiên": "covers/67.jpg"
+  "Qủa bầu tiên": "covers/67.jpg",
+  "Doraemon truyện ngắn": "covers/68.jpg"
 };
 
 const BOOKS_ZH = {
@@ -310,9 +348,10 @@ const SERIES_ZH = {
   "Những bài học đầu tiên về Giới tính": ["這套書幫助寶寶認識身體、學會保護自己，用溫柔的故事說明。", "陪孩子一起讀，孩子發問時自然地回答。"],
   "Khám phá kiến thức – Vì sao": ["給愛問「為什麼？」的寶寶的簡短問答書。", "讀答案之前先問寶寶：「你猜是為什麼？」"],
   "Tò Mò Muốn Biết": ["多層翻翻書，寶寶自己翻開來探索世界知識。", "和寶寶一起輕輕翻，翻頁很容易破喔。"],
-  "Storytime": ["簡短的圖畫故事，幫助寶寶養成好習慣和好性格。", "讀完問寶寶：「你喜歡哪個角色？」"]
+  "Storytime": ["簡短的圖畫故事，幫助寶寶養成好習慣和好性格。", "讀完問寶寶：「你喜歡哪個角色？」"],
+  "Doraemon truyện ngắn": ["一套 45 集。每集有好幾個短篇故事，講大雄和從未來來的機器貓哆啦A夢。", "讀完問孩子：「如果有一個道具，你最想要哪一個？」"]
 };
-const SERIES_NAME_ZH = {"Những bài học đầu tiên về Giới tính":"性別啟蒙第一課","Khám phá kiến thức – Vì sao":"探索知識 – 為什麼","Tò Mò Muốn Biết":"好奇想知道","Storytime":"Storytime 故事時間","Ehon  Ai ở sau lưng bạn thế":"Ehon 誰在你背後","Tự bảo vệ mình":"自我保護","Ehon Thực phẩm tâm hồn cho bé":"Ehon 給寶寶的心靈食糧","Truyện kể mầm non":"幼兒園故事 – 動物世界","Tủ sách vàng cho con":"給孩子的金色書櫃","Bách khoa toàn thư đầu tiên của tôi cùng gấu POOH":"小熊維尼的第一本百科","Tranh truyện cổ tích nổi tiếng thế giới":"世界著名童話繪本","Tranh truyện cổ tích Việt Nam":"越南民間故事繪本","Truyện cổ tích Việt Nam":"越南民間故事"};
+const SERIES_NAME_ZH = {"Những bài học đầu tiên về Giới tính":"性別啟蒙第一課","Khám phá kiến thức – Vì sao":"探索知識 – 為什麼","Tò Mò Muốn Biết":"好奇想知道","Storytime":"Storytime 故事時間","Ehon  Ai ở sau lưng bạn thế":"Ehon 誰在你背後","Tự bảo vệ mình":"自我保護","Ehon Thực phẩm tâm hồn cho bé":"Ehon 給寶寶的心靈食糧","Truyện kể mầm non":"幼兒園故事 – 動物世界","Tủ sách vàng cho con":"給孩子的金色書櫃","Bách khoa toàn thư đầu tiên của tôi cùng gấu POOH":"小熊維尼的第一本百科","Tranh truyện cổ tích nổi tiếng thế giới":"世界著名童話繪本","Tranh truyện cổ tích Việt Nam":"越南民間故事繪本","Truyện cổ tích Việt Nam":"越南民間故事","Doraemon truyện ngắn":"哆啦A夢 短篇"};
 const TITLES_ZH = {
   "Ú òa mở ra – Phát triển nhận thức":"躲貓貓翻翻書 – 認知發展","Con thích chơi với bạn ấy lắm":"我好喜歡和他一起玩","Tớ cũng muốn đứng tè":"我也想站著尿尿","Nếu con là con trai":"如果我是男孩","Con được sinh ra từ đâu":"我是從哪裡來的","Tớ không ti mẹ nữa":"我不再吃媽媽的奶了","Con tắm cùng bố được không":"我可以和爸爸一起洗澡嗎","Đừng chạm vào cháu":"不要碰我","Con muốn ngủ một mình":"我想自己睡",
   "Vì sao cần ăn rau":"為什麼要吃蔬菜","Vì sao bị ốm":"為什麼會生病","Vì sao cần biết đọc":"為什麼要會閱讀","Vì sao phải đi ngủ":"為什麼要睡覺","Vì sao khủng long":"恐龍為什麼消失了","Vì sao trời đổ mưa":"為什麼會下雨","Vì sao ngày và đêm":"為什麼有白天和黑夜","Vì sao nên nghe lời":"為什麼要聽話","Vì sao nước biển mặn":"海水為什麼是鹹的","Vì sao ong kêu vo ve":"蜜蜂為什麼嗡嗡叫","Khả năng thuyết phục":"說服力",
@@ -356,17 +395,17 @@ const TITLES_ZH = {
   "Qủa bầu tiên":"仙葫蘆"
 };
 const UI = {
-  vi:{h1:"Tủ sách cho con 📚",sub:"Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.",guide:"Đọc cùng con thế nào? →",howB:"Muốn mượn? ",how:"Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần.",books:"cuốn sách",left:"cuốn đang còn",borrowed:"lượt đã mượn",search:"Tìm tên sách…",only:"Còn sách",unknown:"Chưa rõ",avail:(a,c)=>c>1?`Còn ${a}/${c} cuốn`:"Còn sách",out:"Đang được mượn",code:"Mã: ",hot:n=>`⭐ Được yêu thích · ${n} lượt`,cnt:n=>`${n} lượt mượn`,empty:"Không tìm thấy sách phù hợp.",loading:"Đang tải danh sách…",notice:"Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.",foot:t=>`Cập nhật lúc ${t}. Tình trạng sách có thể chậm vài phút.`,btn:"中文",zones:{all:"Tất cả",y:"🟡 0–2 tuổi",g:"🟢 2–4 tuổi",b:"🔵 4–6 tuổi"},zone:{y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi"}},
-  zh:{h1:"給孩子的書櫃 📚",sub:"Lovetex 員工孩子的免費書籍。不用押金，不收費。",guide:"怎麼陪孩子讀？→",howB:"想借書？",how:"到辦公室借書，下班順路來就可以。借期 2 週，可續借 1 次。",books:"本書",left:"本還在",borrowed:"次已借出",search:"搜尋書名…",only:"還有書",unknown:"未確定",avail:(a,c)=>c>1?`還有 ${a}/${c} 本`:"還有書",out:"已被借走",code:"編號：",hot:n=>`⭐ 很受歡迎 · 被借 ${n} 次`,cnt:n=>`被借 ${n} 次`,empty:"找不到符合的書。",loading:"載入書單中…",notice:"暫時無法載入借閱狀況。書單仍可瀏覽，請到辦公室詢問書是否還在。",foot:t=>`更新時間 ${t}。借閱狀況可能延遲幾分鐘。`,btn:"Tiếng Việt",zones:{all:"全部",y:"🟡 0–2 歲",g:"🟢 2–4 歲",b:"🔵 4–6 歲"},zone:{y:"0–2 歲",g:"2–4 歲",b:"4–6 歲"}}
+  vi:{h1:"Tủ sách cho con 📚",sub:"Sách miễn phí cho con của anh chị em Lovetex. Không cần đặt cọc, không mất phí.",guide:"Đọc cùng con thế nào? →",howB:"Muốn mượn? ",how:"Đến văn phòng để mượn sách, tan ca ghé là được. Mượn 2 tuần, gia hạn được 1 lần.",books:"cuốn sách",left:"cuốn đang còn",borrowed:"lượt đã mượn",search:"Tìm tên sách…",only:"Còn sách",unknown:"Chưa rõ",avail:(a,c)=>c>1?`Còn ${a}/${c} cuốn`:"Còn sách",out:"Đang được mượn",code:"Mã: ",hot:n=>`⭐ Được yêu thích · ${n} lượt`,cnt:n=>`${n} lượt mượn`,empty:"Không tìm thấy sách phù hợp.",loading:"Đang tải danh sách…",notice:"Chưa tải được tình trạng sách. Danh sách vẫn xem được, hãy đến văn phòng hỏi để biết sách còn hay không.",foot:t=>`Cập nhật lúc ${t}. Tình trạng sách có thể chậm vài phút.`,btn:"中文",zones:{all:"Tất cả",y:"🟡 0–2 tuổi",g:"🟢 2–4 tuổi",b:"🔵 4–6 tuổi",p:"🟣 6+ tuổi",r:"🔴 Cho ba mẹ"},zone:{y:"0–2 tuổi",g:"2–4 tuổi",b:"4–6 tuổi",p:"6+ tuổi",r:"Cho ba mẹ"},serTitle:"Doraemon – Truyện ngắn",serAvail:(a,c)=>`Còn ${a}/${c} tập`,serOpen:c=>`Xem ${c} tập →`,serRule:"📌 Mỗi lần mượn tối đa 3 tập. Trả xong mượn tiếp.",serOnly:"Chỉ xem tập còn sách",serOk:"Còn sách",serOut:"Đang mượn",vol:n=>`Tập ${n}`,close:"Đóng"},
+  zh:{h1:"給孩子的書櫃 📚",sub:"Lovetex 員工孩子的免費書籍。不用押金，不收費。",guide:"怎麼陪孩子讀？→",howB:"想借書？",how:"到辦公室借書，下班順路來就可以。借期 2 週，可續借 1 次。",books:"本書",left:"本還在",borrowed:"次已借出",search:"搜尋書名…",only:"還有書",unknown:"未確定",avail:(a,c)=>c>1?`還有 ${a}/${c} 本`:"還有書",out:"已被借走",code:"編號：",hot:n=>`⭐ 很受歡迎 · 被借 ${n} 次`,cnt:n=>`被借 ${n} 次`,empty:"找不到符合的書。",loading:"載入書單中…",notice:"暫時無法載入借閱狀況。書單仍可瀏覽，請到辦公室詢問書是否還在。",foot:t=>`更新時間 ${t}。借閱狀況可能延遲幾分鐘。`,btn:"Tiếng Việt",zones:{all:"全部",y:"🟡 0–2 歲",g:"🟢 2–4 歲",b:"🔵 4–6 歲",p:"🟣 6 歲以上",r:"🔴 家長"},zone:{y:"0–2 歲",g:"2–4 歲",b:"4–6 歲",p:"6 歲以上",r:"家長"},serTitle:"哆啦A夢 短篇",serAvail:(a,c)=>`還有 ${a}/${c} 集`,serOpen:c=>`看 ${c} 集 →`,serRule:"📌 每次最多借 3 集，還了再借。",serOnly:"只看還在的集數",serOk:"還有書",serOut:"已被借走",vol:n=>`第 ${n} 集`,close:"關閉"}
 };
 let lang="vi";
 if(new URLSearchParams(location.search).get("lang")==="zh") lang="zh";
 const T=()=>UI[lang];
 
-const ZONES = ["all","y","g","b"];
+const ZONES = ["all","y","g","b","p","r"];
 const state = {zone:"all", q:"", onlyAvail:false, items:[], live:false, loaded:false, time:""};
 
-function zoneKey(z){ z=z||""; if(z.includes("0-2")||z.includes("🟡"))return "y"; if(z.includes("2-4")||z.includes("🟢"))return "g"; if(z.includes("4-6")||z.includes("🔵"))return "b"; return "b"; }
+function zoneKey(z){ z=z||""; if(z.includes("家長")||z.includes("🔴"))return "r"; if(z.includes("6+")||z.includes("🟣"))return "p"; if(z.includes("0-2")||z.includes("🟡"))return "y"; if(z.includes("2-4")||z.includes("🟢"))return "g"; if(z.includes("4-6")||z.includes("🔵"))return "b"; return "b"; }
 function zoneLabel(k){ return T().zone[k]; }
 
 function parseCSV(text){
@@ -424,11 +463,13 @@ function render(){
   if(!state.loaded){ list.appendChild(el("p","empty",T().loading)); return; }
   const q=state.q.trim().toLowerCase();
   let items=state.items.filter(it=>(state.zone==="all"||it.zone===state.zone)&&(!q||it.title.toLowerCase().includes(q)||it.series.toLowerCase().includes(q)||(TITLES_ZH[it.title]||"").includes(q)));
+  items=collapseSeries(items);
   if(state.onlyAvail&&state.live) items=items.filter(it=>it.avail>0);
-  const ZO={y:0,g:1,b:2}, num=it=>{const m=/(\d+)/.exec((it.codes||[])[0]||"");return m?+m[1]:9999;};
+  const ZO={y:0,g:1,b:2,p:3,r:4}, num=it=>{const m=/(\d+)/.exec((it.codes||[])[0]||"");return m?+m[1]:9999;};
   items.sort((a,b)=>ZO[a.zone]-ZO[b.zone]||num(a)-num(b)||a.title.localeCompare(b.title,"vi"));
   if(!items.length){ list.appendChild(el("p","empty",T().empty)); return; }
   for(const it of items){
+    if(it.isSeries){ list.appendChild(seriesCard(it)); continue; }
     const [desc,tip]=lookupBlurb(it.title,it.series);
     const card=el("article","card z-"+it.zone);
     card.appendChild(el("div","band"));
@@ -459,6 +500,81 @@ function render(){
     wrap.appendChild(body); card.appendChild(wrap); list.appendChild(card);
   }
 }
+
+/* ===== Bộ truyện nhiều tập (Doraemon) gộp thành 1 thẻ / 多集套書收成一張卡 ===== */
+const SERIES_GROUP="Doraemon truyện ngắn";
+const volNo=it=>{const m=/tập\s*(\d+)/i.exec(it.title)||/(\d+)\s*$/.exec(it.codes[0]||"");return m?+m[1]:0;};
+function seriesOf(){ return state.items.filter(it=>it.series.startsWith(SERIES_GROUP)).sort((a,b)=>volNo(a)-volNo(b)); }
+function collapseSeries(items){
+  const vols=items.filter(it=>it.series.startsWith(SERIES_GROUP));
+  if(!vols.length) return items;
+  const all=seriesOf();
+  const g={isSeries:true,title:SERIES_GROUP,series:SERIES_GROUP,zone:vols[0].zone,copies:all.length,
+    avail:all.reduce((a,b)=>a+b.avail,0),known:all.some(v=>v.known),count:all.reduce((a,b)=>a+b.count,0),codes:[all[0].codes[0]]};
+  return items.filter(it=>!it.series.startsWith(SERIES_GROUP)).concat(g);
+}
+function seriesCard(it){
+  const t=T(), [desc,tip]=lookupBlurb(it.title,it.series), vs=seriesOf();
+  const card=el("article","card series-card z-"+it.zone);
+  card.tabIndex=0; card.setAttribute("role","button"); card.setAttribute("aria-label",t.serTitle+" – "+t.serOpen(it.copies));
+  card.appendChild(el("div","band"));
+  const wrap=el("div","wrap"), imgbox=el("div","imgbox");
+  const im=el("img","cover"); im.src=COVERS[SERIES_GROUP]; im.alt=t.serTitle; im.loading="lazy"; im.width=420; im.height=420; imgbox.appendChild(im);
+  imgbox.appendChild(!state.live||!it.known?el("span","status st-na",t.unknown):el("span","status "+(it.avail>0?"st-ok":"st-out"),it.avail>0?t.serAvail(it.avail,it.copies):t.out));
+  wrap.appendChild(imgbox);
+  const body=el("div","body"), top=el("div","top");
+  top.appendChild(el("span","zone",zoneLabel(it.zone))); body.appendChild(top);
+  body.appendChild(el("h2",null,t.serTitle));
+  if(lang==="zh") body.appendChild(el("div","series","Doraemon – Truyện ngắn"));
+  if(desc) body.appendChild(el("p","desc",desc));
+  body.appendChild(el("div","rule",t.serRule));
+  if(tip) body.appendChild(el("div","tip","💡 "+tip));
+  const meta=el("div","meta");
+  meta.appendChild(el("span",null,t.code+vs[0].codes[0]+" → "+vs[vs.length-1].codes[0]));
+  if(it.count>=CONFIG.hotCount) meta.appendChild(el("span","hot",t.hot(it.count)));
+  else if(it.count>0) meta.appendChild(el("span",null,t.cnt(it.count)));
+  body.appendChild(meta);
+  body.appendChild(el("span","open",t.serOpen(it.copies)));
+  wrap.appendChild(body); card.appendChild(wrap);
+  card.onclick=()=>openSheet(card);
+  card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openSheet(card);}};
+  return card;
+}
+let sheetOpener=null;
+function renderSheet(){
+  const t=T(), vs=seriesOf(), only=document.getElementById("sheetOnly").checked;
+  document.getElementById("sheetTitle").textContent=t.serTitle;
+  const avail=vs.reduce((a,b)=>a+b.avail,0);
+  document.getElementById("sheetMeta").textContent=vs.length?`${t.code}${vs[0].codes[0]} → ${vs[vs.length-1].codes[0]}`+(state.live?` · ${t.serAvail(avail,vs.length)}`:""):"";
+  document.getElementById("sheetRule").textContent=t.serRule;
+  document.getElementById("sheetOnlyLbl").textContent=t.serOnly;
+  document.getElementById("sheetClose").setAttribute("aria-label",t.close);
+  const lg=document.getElementById("sheetLegend"); lg.textContent="";
+  const li=(bg,txt)=>{const s=el("span"), i=el("i"); i.style.cssText=bg; s.appendChild(i); s.appendChild(document.createTextNode(txt)); lg.appendChild(s);};
+  li("background:var(--ok-soft);border:2px solid #bfe5cd",t.serOk); li("background:#f1ede7",t.serOut);
+  const V=document.getElementById("sheetVols"); V.textContent="";
+  for(const v of vs){
+    const n=volNo(v), cls=!state.live||!v.known?"v-na":(v.avail>0?"v-ok":"v-out");
+    if(only&&state.live&&cls!=="v-ok") continue;
+    const d=el("div","vol "+cls); d.title=t.vol(n)+" · "+(cls==="v-ok"?t.serOk:cls==="v-out"?t.serOut:t.unknown);
+    const im=el("img"); im.src="covers/doraemon/"+String(n).padStart(2,"0")+".jpg"; im.alt=""; im.loading="lazy"; im.width=180; im.height=270; d.appendChild(im);
+    d.appendChild(el("b",null,String(n))); d.appendChild(el("small",null,v.codes.join(", ")));
+    V.appendChild(d);
+  }
+}
+function openSheet(from){
+  sheetOpener=from||null; renderSheet();
+  document.getElementById("sheetBg").classList.add("show"); document.body.style.overflow="hidden";
+  document.getElementById("sheetClose").focus();
+}
+function closeSheet(){
+  document.getElementById("sheetBg").classList.remove("show"); document.body.style.overflow="";
+  if(sheetOpener) sheetOpener.focus();
+}
+document.getElementById("sheetClose").onclick=closeSheet;
+document.getElementById("sheetBg").onclick=e=>{if(e.target.id==="sheetBg")closeSheet();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.getElementById("sheetBg").classList.contains("show"))closeSheet();});
+document.getElementById("sheetOnly").onchange=renderSheet;
 
 function renderStats(){
   const s=document.getElementById("stats"); s.textContent="";
@@ -516,6 +632,7 @@ function applyLang(){
   const n=document.getElementById("notice"); n.hidden=!(state.loaded&&!state.live); n.firstElementChild.textContent=t.notice;
   document.getElementById("foot").textContent=state.live?t.foot(state.time):"";
   renderHow(); renderZones(); renderStats(); render();
+  if(document.getElementById("sheetBg").classList.contains("show")) renderSheet();
 }
 document.getElementById("lang").addEventListener("click",()=>{
   lang=lang==="vi"?"zh":"vi";
