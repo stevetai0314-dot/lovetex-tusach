@@ -470,7 +470,7 @@ function render(){
   items=collapseSeries(items);
   if(state.onlyAvail&&state.live) items=items.filter(it=>it.avail>0);
   const ZO={y:0,g:1,b:2,p:3,r:4}, num=it=>{const m=/(\d+)/.exec((it.codes||[])[0]||"");return m?+m[1]:9999;};
-  items.sort((a,b)=>ZO[a.zone]-ZO[b.zone]||num(a)-num(b)||a.title.localeCompare(b.title,"vi"));
+  items.sort((a,b)=>(b.isSeries?1:0)-(a.isSeries?1:0)||ZO[a.zone]-ZO[b.zone]||num(a)-num(b)||a.title.localeCompare(b.title,"vi"));
   if(!items.length){ list.appendChild(el("p","empty",T().empty)); return; }
   for(const it of items){
     if(it.isSeries){ list.appendChild(seriesCard(it)); continue; }
